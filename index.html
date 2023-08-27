@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Multiplication with Images and Result</title>
+<style>
+  body {
+    font-family: "Schoolbell", "Comic Sans MS", "Dyslexie", Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  #multiplication {
+    font-size: 36px;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  #multiplication .number {
+    font-size: 48px;
+  }
+
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .number-image {
+    width: 150%;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+  }
+
+  #result {
+    font-size: 48px;
+    white-space: nowrap;
+    margin-top: 10px;
+  }
+
+  #updateButton {
+    background-color: #ffb6c1;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  #updateButton:focus {
+    outline: none;
+  }
+</style>
+</head>
+<body>
+  <div id="multiplication">
+    <div class="image-container">
+      <span class="number" id="numberA">00</span>
+      <img src="" alt="Numberblocks Image" class="number-image" id="imageA">
+    </div>
+    <span>×</span>
+    <div class="image-container">
+      <span class="number" id="numberB">00</span>
+      <img src="" alt="Numberblocks Image" class="number-image" id="imageB">
+    </div>
+    <span>=</span>
+    <div class="image-container">
+      <span id="result">0000</span>
+      <img src="numberblocks_placeholder.png" alt="Numberblocks Image" class="number-image" id="numberImage">
+    </div>
+  </div>
+  <button id="updateButton">更新</button>
+
+  <script>
+    const updateButton = document.getElementById("updateButton");
+    const numberA = document.getElementById("numberA");
+    const numberB = document.getElementById("numberB");
+    const imageA = document.getElementById("imageA");
+    const imageB = document.getElementById("imageB");
+    const numberImage = document.getElementById("numberImage");
+    const resultDisplay = document.getElementById("result");
+
+    let currentUtterance = null;
+
+    function speak(text) {
+      if (currentUtterance) {
+        window.speechSynthesis.cancel();
+      }
+
+      const speechSynthesis = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.75;
+      currentUtterance = utterance;
+      speechSynthesis.speak(utterance);
+    }
+
+    function updateMultiplication() {
+      const aa = Math.floor(Math.random() * 32 + 1);
+      const bb = Math.floor(Math.random() * 32 + 1);
+      const result = aa * bb;
+
+      numberA.textContent = aa;
+      numberB.textContent = bb;
+      resultDisplay.textContent = result;
+
+      const imageAURL = `./fig/numberblocks ${aa}.jpg`;
+      const imageBURL = `./fig/numberblocks ${bb}.jpg`;
+      imageA.src = imageAURL;
+      imageB.src = imageBURL;
+
+      const numberImageURL = `./fig/numberblocks ${result}.jpg`;
+      numberImage.src = numberImageURL;
+
+      speak(`${aa} かける ${bb} イコール ${result}`);
+    }
+
+    updateButton.addEventListener("click", updateMultiplication);
+
+    // 10秒ごとに自動更新
+    setInterval(updateMultiplication, 10000);
+  </script>
+</body>
+</html>
